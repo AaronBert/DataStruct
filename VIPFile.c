@@ -105,9 +105,16 @@ void rearrange(char *output,char const *input,int n_columns,int const columns[])
 		int nchars = columns[col+1]-columns[col]+1;
 
 		/*
-		*如果输入行结束||输出行数组已满，结束任务
+		 * 如果输入字符串长度没有那么长(即长度小于数组数据),则跳过这个范围
+		 *即ByeBye，而数据要求从9-20，则进行此操作
+		 */
+		if(columns[col]>=len)
+			continue;
+
+		/*
+		*如果输出行数组已满，结束任务
 		*/
-		if(columns[col]>=len||output_col==MAX_INPUT-1)
+		if(output_col==MAX_INPUT-1)
 			break;
 
 		/*
@@ -115,6 +122,13 @@ void rearrange(char *output,char const *input,int n_columns,int const columns[])
 		*/
 		if(output_col + nchars > MAX_INPUT-1)
 			nchars = MAX_INPUT-output_col - 1;
+
+		/*
+		 *观察输入行中多少个字符在这里范围里面，如果小于nchars，对nchars的值进行调整
+		 *即如果只有ByeBye，而数据要求4-10，则进行此操作
+		 */
+		if(columns[col] + nchars - 1 >= len)
+			nchars = len - columns[col];
 
 		/*
 		*复制相关数据并记录更新输出字符个数
